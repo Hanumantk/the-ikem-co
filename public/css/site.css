@@ -426,10 +426,26 @@ button { background: none; border: 0; padding: 0; cursor: pointer; }
 .menu-float { display: inline-flex; align-items: center; gap: var(--space-xs); }
 .menu-float.is-visible { opacity: 1; transform: none; pointer-events: auto; }
 .menu-float { transition: opacity var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out); }
-/* Dark at rest; on hover it returns to the original linen chip with an ink border. */
-.menu-float { transition: opacity var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out); }
-.menu-float:focus-visible, .menu-float.is-hover { background: var(--color-paper); color: var(--color-ink); border-color: var(--color-ink); }
-@media (hover: hover) and (pointer: fine) { .menu-float:hover { background: var(--color-paper); color: var(--color-ink); border-color: var(--color-ink); } }
+/* Dark at rest. On hover a linen fill rises from the baseline, the same move as the Send button, and the label turns to ink. */
+.menu-float { isolation: isolate; overflow: hidden; transition: opacity var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out); }
+.menu-float::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-paper);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--dur-short) var(--ease-out);
+}
+.menu-float:focus-visible, .menu-float.is-hover, .menu-float.is-active { color: var(--color-ink); border-color: var(--color-ink); }
+.menu-float:focus-visible::before, .menu-float.is-hover::before, .menu-float.is-active::before { transform: scaleY(1); }
+.menu-float:focus-visible { outline-color: var(--color-focus); }
+@media (hover: hover) and (pointer: fine) {
+  .menu-float:hover { color: var(--color-ink); border-color: var(--color-ink); }
+  .menu-float:hover::before { transform: scaleY(1); }
+}
+.menu-float:active::before { transform: scaleY(1); transition-duration: 60ms; }
 
 /* Small caps controls (header login, menu open and close, reel toggle, newsletter submit):
  * a hairline draws in under the label from the left and leaves to the right. */
