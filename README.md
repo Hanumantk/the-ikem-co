@@ -4,7 +4,7 @@ Personal brand site for Ikem Chukumerije. Static HTML, no framework, no dependen
 
 ## Publishing
 
-The site lives at **https://hanumantk.github.io/the-ikem-co/** and is published from the `main` branch of `github.com/Hanumantk/the-ikem-co` by GitHub Actions (`.github/workflows/deploy.yml`): every push rebuilds with `node build.mjs --check` and deploys `dist/`. `dist/` itself is not committed.
+The site lives at **https://hanumantk.github.io/the-ikem-co/**. Source is the `main` branch of `github.com/Hanumantk/the-ikem-co`; the built pages are served by GitHub Pages from the `gh-pages` branch. `dist/` is never committed to `main`.
 
 To put your latest changes live:
 
@@ -12,7 +12,9 @@ To put your latest changes live:
 npm run sync
 ```
 
-That commits everything and pushes; the live page updates in about two minutes (progress under the repository’s Actions tab). Pass a message if you like: `node sync.mjs "New sold record"`. When a custom domain is ready, add it under the repository’s Pages settings and update `url` in `src/helpers.mjs`.
+That builds (the dash check must pass), commits everything, pushes `main`, and publishes `dist/` to `gh-pages`. The live page updates in about a minute. Pass a message if you like: `node sync.mjs "New sold record"`.
+
+If you would rather have GitHub build the site itself on every push, grant the CLI the workflow scope once (`gh auth refresh -h github.com -s workflow`) and commit a Pages workflow under `.github/workflows/`; the sync script’s gh-pages step can then be dropped. When a custom domain is ready, add it under the repository’s Pages settings and update `url` in `src/helpers.mjs`.
 
 ## Run it
 
