@@ -4,6 +4,7 @@
  * No dependencies. Node 18 or later.
  */
 import { mkdirSync, writeFileSync, cpSync, rmSync, existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { join, dirname, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { layout } from "./src/partials.mjs";
@@ -33,11 +34,18 @@ rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 cpSync(join(here, "public"), out, { recursive: true });
 
+/* Cache busting: stylesheets and scripts are linked with a short content hash, so a change
+ * reaches visitors as soon as the page does instead of waiting out the CDN and browser cache. */
+const ASSETS = ["css/tokens.css", "css/site.css", "js/lenis.min.js", "js/site.js"];
+const assetVersion = Object.fromEntries(ASSETS.map((a) => [a, createHash("sha1").update(readFileSync(join(here, "public", a))).digest("hex").slice(0, 8)]));
+const versionAssets = (html) => ASSETS.reduce((h, a) => h.split(`${a}"`).join(`${a}?v=${assetVersion[a]}"`), html);
+
 for (const page of pages) {
   const depth = page.path.split("/").length - 1;
   const root = depth === 0 ? "./" : "../".repeat(depth);
   let html = layout({ ...page, root, head: page.head || "" });
   html = html.replaceAll("{{root}}", root);
+  html = versionAssets(html);
   const file = join(out, page.path);
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(file, html);
