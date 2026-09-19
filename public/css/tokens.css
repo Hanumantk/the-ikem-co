@@ -1,0 +1,108 @@
+/* Hallmark · macrostructure: Photographic · H6 hero knobs: image=full-bleed, caption=lower-left, text=below
+ * theme: custom · vibe: "cinematic linen, stone, forest, understated" · paper: oklch(95.5% 0.012 82) · accent: oklch(33% 0.065 162)
+ * display: Cormorant Garamond · body: EB Garamond · axes: light / roman-serif / chromatic-other (forest ~162°)
+ * genre: editorial · nav: N9 edge-aligned minimal (menu disclosure) · footer: Ft7 newsletter-first (split)
+ * enrichment: none (real photography, typography) · studied: no · context: inferred · v1.1.0
+ * Hallmark · pre-emit critique: P5 H4 E4 S5 R5 V4
+ */
+
+:root {
+  /* ---- Paper, ink, and the greys between (all tinted warm, toward stone) ---- */
+  --color-paper:        oklch(95.5% 0.012 82);   /* linen */
+  --color-paper-2:      oklch(92.5% 0.014 80);   /* stone */
+  --color-paper-3:      oklch(88%   0.016 78);   /* deeper stone · image slots */
+  --color-ink:          oklch(23%   0.014 70);   /* umber, never black */
+  --color-ink-2:        oklch(34%   0.012 70);
+  --color-muted:        oklch(44%   0.012 70);
+  --color-neutral:      oklch(58%   0.012 74);
+  --color-rule:         oklch(80%   0.014 78);
+  --color-rule-2:       oklch(86%   0.012 80);
+
+  /* ---- The one accent: forest, taken from the wordmark ---- */
+  --color-accent:       oklch(33%   0.065 162);
+  --color-accent-ink:   oklch(95.5% 0.012 82);
+  --color-focus:        oklch(42%   0.10  160);
+
+  /* ---- Inverted surface for the cinematic bands and the menu (forest, not black) ---- */
+  --color-forest:       oklch(25%   0.03  160);
+  --color-forest-2:     oklch(29%   0.03  160);
+  --color-on-forest:    oklch(93%   0.012 82);
+  --color-on-forest-2:  oklch(76%   0.014 88);
+  --color-rule-forest:  oklch(38%   0.02  160);
+
+  /* ---- Feedback, kept quiet ---- */
+  --color-error:        oklch(42%   0.12  30);
+  --color-success:      var(--color-accent);
+
+  /* ---- Overlays for text on photographs (modifiers, not palette) ---- */
+  --scrim-photo:        linear-gradient(to top, oklch(20% 0.02 70 / 0.62), oklch(20% 0.02 70 / 0) 55%);
+  --scrim-photo-top:    linear-gradient(to bottom, oklch(20% 0.02 70 / 0.38), oklch(20% 0.02 70 / 0) 30%);
+  --scrim-modal:        oklch(15% 0.02 70 / 0.7);
+
+  /* ---- Type ---- */
+  --font-display: "Cormorant Garamond", "Cormorant", Garamond, "Times New Roman", serif;
+  --font-body:    "EB Garamond", Garamond, "Times New Roman", serif;
+
+  /* Three weights carry the hierarchy: light for what is large, strong for what must read first at a glance. */
+  --wt-light:   300;   /* display titles, big numerals, big quotes, menu */
+  --wt-regular: 400;   /* ledes, prose, quiet secondary text */
+  --wt-medium:  500;   /* the hero name only */
+  --wt-strong:  600;   /* labels, names, definitions, buttons, links, wordmark */
+  --wt-bold:    700;   /* every heading: page titles, photo titles, section heads, card and step titles */
+
+  --text-xs:   0.8125rem;
+  --text-sm:   0.9375rem;
+  --text-base: 1.125rem;
+  --text-md:   1.375rem;
+  --text-lg:   1.75rem;
+  --text-xl:   2.1875rem;
+  --text-2xl:  2.75rem;
+  --text-3xl:  3.4375rem;
+  --text-display-s: clamp(2.25rem, 3.4vw + 1rem, 3.75rem);
+  --text-display:   clamp(2.75rem, 5vw + 1rem, 5.25rem);
+
+  --leading-display: 1.04;
+  --leading-tight:   1.2;
+  --leading-body:    1.6;
+
+  --track-caps: 0.14em;
+  --track-display: -0.015em;
+
+  /* ---- Space (4 pt) ---- */
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs:  0.5rem;
+  --space-sm:  0.75rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-4xl: 9rem;
+
+  --page-gutter: clamp(1rem, 4.5vw, 4.5rem);
+  --measure: 62ch;
+  --measure-narrow: 46ch;
+
+  /* ---- Rules, radii, shadows ---- */
+  --rule-hair: 1px;
+  --radius-input: 0;
+  --radius-media: 0;
+  --shadow-whisper: 0 1px 2px oklch(20% 0.01 70 / 0.06);
+
+  /* ---- Motion ---- */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:     cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 240ms;
+  --dur-long:  460ms;
+
+  /* ---- Z scale ---- */
+  --z-base: 1;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 400;
+  --z-toast: 500;
+}

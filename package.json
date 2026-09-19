@@ -1,0 +1,16 @@
+{
+  "name": "the-ikem-co",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal brand website for Ikem Chukumerije, Los Angeles real estate broker.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs --check",
+    "serve": "node serve.mjs",
+    "dev": "node build.mjs --check && node serve.mjs",
+    "sync": "node sync.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

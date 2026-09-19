@@ -1,0 +1,9 @@
+{
+  "scanned": "2026-09-19",
+  "framework": "vanilla HTML via build.mjs (Node, no dependencies)",
+  "fonts": "Cormorant Garamond (display) + EB Garamond (body), Google Fonts",
+  "palette": "OKLCH custom properties in public/css/tokens.css",
+  "motion": "motion-cut (no motion library)",
+  "spacing": "4 pt scale, --space-* tokens",
+  "notes": "Empty project at first run. Nothing to preserve; full Hallmark stack introduced."
+}

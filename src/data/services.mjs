@@ -1,0 +1,103 @@
+/* Service pages. Each renders through the service template in templates.mjs. */
+export default [
+  {
+    slug: "commercial",
+    name: "Commercial Real Estate",
+    short: "Retail, office, multifamily, and land, acquired and sold with the same discretion as a home.",
+    lede: "Retail, office, multifamily, and land, represented for owners and investors who prefer one broker across their holdings.",
+    image: "ikem-glass-door",
+    pos: "50% 30%",
+    intro: `<p>Many of Ikem’s residential clients own or want to own income property, and most of them would rather not open a second relationship to do it. The commercial practice grew from that. It covers acquisitions, dispositions, and leasing for owners, with underwriting reviewed in writing before any offer is made.</p>
+<p>The standard is the same as on the residential side: the client understands the numbers, the risks, and the alternatives before signing anything.</p>`,
+    covers: [
+      "Acquisition of retail, office, multifamily, and land in California and the other states where Ikem is licensed",
+      "Sale of income property, including quiet dispositions to a short list of qualified buyers",
+      "Landlord representation in leasing",
+      "Coordination of 1031 exchanges with your tax counsel and qualified intermediary",
+      "Review of rent rolls, expenses, debt terms, and the assumptions behind an asking price",
+      "Site selection for operators expanding in Los Angeles",
+    ],
+    steps: [
+      { title: "The brief", body: "What you own, what you want it to do for you, and on what timeline. Return targets, hold period, tolerance for management, and tax position all shape what is worth looking at." },
+      { title: "Underwriting", body: "Every candidate property gets a written analysis: income, expenses, debt, capital needs, and the assumptions that make the price work or not. You see it before an offer, not after." },
+      { title: "Execution", body: "Negotiation through escrow with lenders, attorneys, accountants, and property managers kept in one loop, so decisions are made once and with the whole picture." },
+    ],
+    closingImage: "ikem-dining-table",
+    closingPos: "60% 50%",
+  },
+  {
+    slug: "sports-entertainment",
+    name: "Sports and Entertainment",
+    short: "Relocation, purchase, sale, and lease for athletes and entertainers, on a schedule the season sets.",
+    lede: "Purchases, sales, leases, and relocations for athletes and entertainers, timed to a trade, a contract, or a shoot rather than to a house hunting season.",
+    image: "ikem-seated-grey",
+    pos: "50% 25%",
+    intro: `<p>Most of Ikem’s career has been spent representing people whose work is public: professional athletes, actors, directors, writers, and the executives around them. The needs are specific. A move happens on a week’s notice. Privacy is a security matter, not a preference. The people involved include agents, business managers, and family offices, and all of them need to be kept informed without being asked to do the work.</p>
+<p>Ikem founded Sports Relocation, a boutique practice built for exactly these moves, and the approach carries across the whole entertainment side of his work.</p>`,
+    covers: [
+      "Relocation on short notice following a trade, a signing, or a production commitment",
+      "Furnished leases and interim housing for a season or a shoot",
+      "Purchases structured through trusts and entities, with title and closing handled to keep names out of the record where the law allows",
+      "Access to homes that are not publicly listed, and quiet sales when a move is known before it is final",
+      "Coordination with agents, business managers, attorneys, and family offices",
+      "Sale of a home when the schedule says leave before the market says sell",
+    ],
+    steps: [
+      { title: "The call", body: "Usually from a business manager or agent, sometimes from the client directly. The first conversation establishes the timeline, the budget, the security requirements, and who needs to be kept informed." },
+      { title: "The shortlist", body: "A short list built around the facility or the studio, the school, privacy, and resale. Ikem previews before the client sees anything, so showings are few and worth the time." },
+      { title: "The move", body: "Offer, escrow, and closing run around the client’s calendar. Ikem stays on after the keys, because a house in a new city needs more than a signature to become a home." },
+    ],
+    closingImage: "ikem-agave-sunset",
+    closingPos: "30% 50%",
+  },
+  {
+    slug: "property-management",
+    name: "Property Management",
+    short: "Homes cared for while you are on the road, on set, or between cities.",
+    lede: "Care of a home while you are on the road, on set, or living between cities, and management of the homes you hold as investments.",
+    image: "ikem-bench-seated",
+    pos: "50% 30%",
+    intro: `<p>Clients who travel for a living need someone who treats their house the way they would if they were in it. Property management at The Ikem Co. covers two situations: the primary home that sits empty for weeks at a time, and the investment property that needs a tenant, a lease, and a monthly statement.</p>
+<p>In both cases the principle is the same. You hear about a problem once, with a proposed solution and a cost attached, and you make one decision.</p>`,
+    covers: [
+      "Oversight of vendors, maintenance, landscaping, and security for owner occupied homes during absences",
+      "Preparation of the house before you return: stocked, serviced, and quiet",
+      "Tenant placement, screening, and lease administration for investment homes",
+      "Rent collection, accounting, and a monthly statement written in plain language",
+      "Coordination of repairs and capital work with trusted contractors",
+      "Regular walkthroughs with photographs, so you see the house even when you cannot visit it",
+    ],
+    steps: [
+      { title: "Walkthrough and inventory", body: "A full record of the house as it stands: systems, finishes, furnishings, and the vendors who already know it." },
+      { title: "The care plan", body: "Named vendors, a maintenance calendar, an approval threshold for spending, and a single number to call. Agreed in writing before anything begins." },
+      { title: "Reporting", body: "A monthly statement and a short note. Problems arrive with solutions. Nothing arrives as a surprise." },
+    ],
+    closingImage: "ikem-concrete-bench",
+    closingPos: "50% 50%",
+  },
+  {
+    slug: "construction-advisory",
+    name: "Construction Advisory",
+    short: "Counsel through renovation and ground up builds, from budget to punch list.",
+    lede: "Counsel through a renovation or a new build, from the first budget to the final walkthrough, on the owner’s side of the table.",
+    image: "ikem-stair-rail",
+    pos: "50% 30%",
+    intro: `<p>Buying the house is often the smaller decision. Renovating it, or building on the lot, is where budgets and timelines go wrong, usually because no one at the table represents only the owner. Ikem’s advisory work fills that seat.</p>
+<p>He is a real estate broker, not a licensed contractor or architect, and the role is advisory: helping you choose the team, read the budget, understand the permit path, and weigh design decisions against what the house will be worth when you sell it. In neighborhoods like View Park, where historic designation shapes what can be done, that counsel starts before the offer.</p>`,
+    covers: [
+      "Selection of architects, contractors, and specialty trades, with references checked and bids compared on equal terms",
+      "Review of budgets, schedules, and contracts before signature",
+      "Permit strategy, including historic districts and unincorporated county jurisdictions",
+      "Periodic progress reviews and help resolving disputes before they harden",
+      "Advice on which design decisions add value at resale and which merely add cost",
+      "Coordination with lenders on construction financing and draws",
+    ],
+    steps: [
+      { title: "Scope", body: "What the house needs, what you want, and what the market will reward. The three are not the same, and the gaps are where budgets are decided." },
+      { title: "Team", body: "Architects and contractors chosen for the specific house and the specific scope, with bids compared line by line rather than by the bottom number." },
+      { title: "Oversight", body: "Site visits at the moments that matter, review of change orders, and a final walkthrough with a punch list that gets finished." },
+    ],
+    closingImage: "ikem-window-dusk",
+    closingPos: "50% 40%",
+  },
+];
