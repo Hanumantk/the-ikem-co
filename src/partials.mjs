@@ -141,6 +141,8 @@ ${replaceArrows(content)}
 ${footer()}
 ${menu(current)}
 <script src="${root}js/lenis.min.js" defer></script>
+<script src="${root}js/gsap.min.js" defer></script>
+<script src="${root}js/ScrollTrigger.min.js" defer></script>
 <script src="${root}js/site.js" defer></script>
 ${iconSprite()}
 </body>

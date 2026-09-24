@@ -36,7 +36,7 @@ cpSync(join(here, "public"), out, { recursive: true });
 
 /* Cache busting: stylesheets and scripts are linked with a short content hash, so a change
  * reaches visitors as soon as the page does instead of waiting out the CDN and browser cache. */
-const ASSETS = ["css/tokens.css", "css/site.css", "js/lenis.min.js", "js/site.js"];
+const ASSETS = ["css/tokens.css", "css/site.css", "js/lenis.min.js", "js/gsap.min.js", "js/ScrollTrigger.min.js", "js/site.js"];
 const assetVersion = Object.fromEntries(ASSETS.map((a) => [a, createHash("sha1").update(readFileSync(join(here, "public", a))).digest("hex").slice(0, 8)]));
 const versionAssets = (html) => ASSETS.reduce((h, a) => h.split(`${a}"`).join(`${a}?v=${assetVersion[a]}"`), html);
 

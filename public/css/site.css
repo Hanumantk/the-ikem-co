@@ -1399,11 +1399,26 @@ button { background: none; border: 0; padding: 0; cursor: pointer; }
 .slot span { border: 1px solid var(--color-rule); padding: var(--space-xs) var(--space-sm); }
 
 /* ------------------------------------------------------------------ */
+/* Choreography support (GSAP in site.js)                              */
+/* ------------------------------------------------------------------ */
+
+/* The first fold's caption waits for its intro. If the script never arrives, a CSS guard shows it
+ * after 2.4 s; without JavaScript at all nothing is hidden. Reduced motion shows it at once. */
+.js .fold:first-child > .fold__caption > * { opacity: 0; animation: reveal-guard 1ms linear 2.4s forwards; }
+.js.no-gsap .fold:first-child > .fold__caption > *,
+.js .fold:first-child > .fold__caption.is-live > * { opacity: 1; animation: none; }
+@keyframes reveal-guard { to { opacity: 1; } }
+.words { display: inline; }
+.w { display: inline-block; will-change: transform, opacity; }
+
+/* ------------------------------------------------------------------ */
 /* Reduced motion                                                      */
 /* ------------------------------------------------------------------ */
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .js .fold:first-child > .fold__caption > * { opacity: 1; animation: none; }
+  .w { will-change: auto; }
   [data-px] { transform: none !important; will-change: auto; }
   *, *::before, *::after {
     animation-duration: 150ms !important;

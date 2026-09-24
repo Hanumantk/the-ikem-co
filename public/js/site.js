@@ -498,13 +498,109 @@
         anchors: { offset: 0 },
         prevent: function (node) { return !!(node.closest && node.closest("dialog, [data-lenis-prevent]")); }
       });
-      (function raf(time) { lenis.raf(time); tickParallax(); requestAnimationFrame(raf); })(0);
+      if (window.gsap && window.ScrollTrigger) {
+        /* One clock for everything: GSAP's ticker drives Lenis, Lenis reports to ScrollTrigger. */
+        window.gsap.registerPlugin(window.ScrollTrigger);
+        lenis.on("scroll", window.ScrollTrigger.update);
+        window.gsap.ticker.add(function (time) { lenis.raf(time * 1000); tickParallax(); });
+        window.gsap.ticker.lagSmoothing(0);
+      } else {
+        (function raf(time) { lenis.raf(time); tickParallax(); requestAnimationFrame(raf); })(0);
+      }
     } catch (err) {
       lenis = null;
     }
   }
   if (!lenis && !reduceMotion && items.length) {
     (function raf() { tickParallax(); requestAnimationFrame(raf); })();
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Choreography (GSAP). Headings arrive word by word; the first fold */
+  /* plays a short intro; everything else is left still. Under reduced */
+  /* motion none of this runs and the page renders in its final state. */
+  /* ---------------------------------------------------------------- */
+
+  var gsap = window.gsap, ST = window.ScrollTrigger;
+  if (gsap && ST && !reduceMotion) {
+    gsap.registerPlugin(ST);
+    var EASE_OUT = "power3.out";
+
+    /* Split a plain text heading into words. The unsplit text stays for assistive technology;
+     * the word spans are decorative. Headings with inline markup are left whole. */
+    function splitWords(el) {
+      if (el.dataset.split) return el.querySelectorAll(".w");
+      if (el.children.length) return null;
+      var text = el.textContent.replace(/\s+/g, " ").trim();
+      if (!text || text.length > 140) return null;
+      var sr = document.createElement("span");
+      sr.className = "visually-hidden";
+      sr.textContent = text;
+      var wrap = document.createElement("span");
+      wrap.className = "words";
+      wrap.setAttribute("aria-hidden", "true");
+      text.split(" ").forEach(function (word, i) {
+        if (i) wrap.appendChild(document.createTextNode(" "));
+        var w = document.createElement("span");
+        w.className = "w";
+        w.textContent = word;
+        wrap.appendChild(w);
+      });
+      el.textContent = "";
+      el.appendChild(sr);
+      el.appendChild(wrap);
+      el.dataset.split = "1";
+      return wrap.querySelectorAll(".w");
+    }
+
+    /* 1. The first fold on the page: a composed intro. Nav stays put; the caption settles in. */
+    var first = document.querySelector("main > .fold");
+    var introCaption = first ? first.querySelector(".fold__caption") : null;
+    if (introCaption && first.getBoundingClientRect().top < window.innerHeight) {
+      var title = introCaption.querySelector(".fold__title");
+      var words = title ? splitWords(title) : null;
+      var rest = Array.prototype.filter.call(introCaption.children, function (c) { return c !== title; });
+      /* Hand the caption back to CSS (the pre-intro rule stops applying), then animate with explicit end states. */
+      introCaption.classList.add("is-live");
+      var tl = gsap.timeline({ defaults: { ease: EASE_OUT }, delay: 0.1 });
+      if (words && words.length) tl.fromTo(words, { y: "0.55em", opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, stagger: 0.06 }, 0);
+      else if (title) tl.fromTo(title, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, 0);
+      if (rest.length) tl.fromTo(rest, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, stagger: 0.12 }, 0.45);
+      introCaption.dataset.intro = "done";
+    }
+
+    /* 2. Every other heading arrives when it enters the viewport, once. */
+    var heads = Array.prototype.slice.call(document.querySelectorAll("main h1, .fold__title, .head-hang h2, .sticky-intro h2, .split > div > h2"));
+    heads.forEach(function (h) {
+      if (introCaption && introCaption.contains(h)) return;
+      if (h.closest("dialog")) return;
+      var ws = splitWords(h);
+      var follow = [];
+      var fold = h.closest(".fold__caption");
+      if (fold) follow = Array.prototype.filter.call(fold.children, function (c) { return c !== h; });
+      var hang = h.closest(".head-hang");
+      if (hang) follow = Array.prototype.filter.call(hang.children, function (c) { return c !== h; });
+      var seq = gsap.timeline({
+        defaults: { ease: EASE_OUT },
+        scrollTrigger: { trigger: h, start: "top 88%", once: true }
+      });
+      if (ws && ws.length) seq.fromTo(ws, { y: "0.5em", opacity: 0 }, { y: 0, opacity: 1, duration: 0.85, stagger: 0.04 }, 0);
+      else seq.fromTo(h, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, 0);
+      if (follow.length) seq.fromTo(follow, { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.1 }, 0.3);
+    });
+
+    /* Measurements move when fonts and photographs land. */
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ST.refresh(); });
+    window.addEventListener("load", function () { ST.refresh(); });
+
+    /* Leave nothing running behind a navigation. */
+    window.addEventListener("pagehide", function () {
+      ST.getAll().forEach(function (t) { t.kill(); });
+      gsap.globalTimeline.clear();
+      if (lenis && lenis.destroy) lenis.destroy();
+    }, { once: true });
+  } else if (!gsap || !ST) {
+    document.documentElement.classList.add("no-gsap");
   }
 
   /* Pause the page scroll while a dialog is open */
