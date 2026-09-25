@@ -87,6 +87,146 @@
   }
 
   /* ---------------------------------------------------------------- */
+  /* Local time in Los Angeles: a quiet fact in the masthead and menu   */
+  /* ---------------------------------------------------------------- */
+
+  var clocks = Array.prototype.slice.call(document.querySelectorAll("[data-clock]"));
+  if (clocks.length && window.Intl && Intl.DateTimeFormat) {
+    try {
+      var fmt = new Intl.DateTimeFormat("en-US", { timeZone: "America/Los_Angeles", hour: "numeric", minute: "2-digit" });
+      var tick = function () {
+        var now = new Date();
+        var text = fmt.format(now).replace(/\s?(AM|PM)$/, function (m, p) { return " " + p.toLowerCase(); });
+        clocks.forEach(function (c) {
+          var t = c.querySelector("[data-clock-time]");
+          if (t) { t.textContent = text; t.setAttribute("datetime", now.toISOString()); }
+          c.hidden = false;
+        });
+      };
+      tick();
+      setTimeout(function () { tick(); setInterval(tick, 60000); }, (60 - new Date().getSeconds()) * 1000);
+    } catch (e) { /* an unknown time zone leaves the clock hidden */ }
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Chapter indicator: the running head of the section in view, fixed */
+  /* at the foot of the page on wide screens.                          */
+  /* ---------------------------------------------------------------- */
+
+  var runheads = Array.prototype.slice.call(document.querySelectorAll("main .runhead"));
+  if (runheads.length > 1 && "IntersectionObserver" in window && window.matchMedia("(min-width: 60rem)").matches) {
+    var chapter = document.createElement("nav");
+    chapter.className = "chapter caps";
+    chapter.setAttribute("aria-label", "Chapters");
+    document.body.appendChild(chapter);
+    var sections = runheads.map(function (rh, i) {
+      var label = rh.querySelector(".caps") ? rh.querySelector(".caps").textContent.trim() : "";
+      var folio = rh.querySelector(".runhead__folio") ? rh.querySelector(".runhead__folio").textContent : "";
+      var m = folio.match(/(\d{2})\s*$/);
+      var el = rh.closest("section") || rh.parentElement;
+      if (!el.id) el.id = "chapter-" + (m ? m[1] : String(i + 1));
+      var a = document.createElement("a");
+      a.href = "#" + el.id;
+      a.innerHTML = '<span class="chapter__num">' + (m ? m[1] : "") + '</span><span class="chapter__label">' + label + '</span>';
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (lenis && lenis.scrollTo) lenis.scrollTo(el, { offset: -24 });
+        else el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+      });
+      chapter.appendChild(a);
+      return { el: el, label: label, num: m ? m[1] : "", a: a };
+    });
+    var active = null;
+    var setChapter = function (s) {
+      if (s === active) return;
+      if (active) active.a.classList.remove("is-current");
+      active = s;
+      if (!s) { chapter.classList.remove("is-on"); return; }
+      s.a.classList.add("is-current");
+      chapter.classList.add("is-on");
+    };
+    var foot = document.querySelector(".site-foot");
+    var pick = function () {
+      var line = window.innerHeight * 0.45, best = null;
+      sections.forEach(function (s) {
+        var r = s.el.getBoundingClientRect();
+        if (r.top <= line && r.bottom > window.innerHeight * 0.15) best = s;
+      });
+      setChapter(best);
+      if (foot) chapter.classList.toggle("is-hidden", foot.getBoundingClientRect().top < window.innerHeight * 0.9);
+    };
+    window.addEventListener("scroll", pick, { passive: true });
+    window.addEventListener("resize", pick);
+    pick();
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Tour: the photograph follows the list item nearest the middle     */
+  /* ---------------------------------------------------------------- */
+
+  document.querySelectorAll("[data-tour]").forEach(function (tourEl) {
+    var items = Array.prototype.slice.call(tourEl.querySelectorAll("[data-tour-item]"));
+    var pics = Array.prototype.slice.call(tourEl.querySelectorAll("[data-tour-pic]"));
+    if (!items.length) return;
+    var current = 0;
+    function show(i) {
+      if (i === current) return;
+      current = i;
+      items.forEach(function (li, k) { li.classList.toggle("is-current", k === i); });
+      pics.forEach(function (p, k) { p.classList.toggle("is-on", k === i); });
+    }
+    var hovering = -1;
+    function update() {
+      if (hovering >= 0) return;
+      var mid = window.innerHeight * 0.5, best = -1, bestDist = Infinity;
+      var r0 = tourEl.getBoundingClientRect();
+      if (r0.bottom < 0 || r0.top > window.innerHeight) return;
+      items.forEach(function (li, k) {
+        var r = li.getBoundingClientRect();
+        var d = Math.abs(r.top + r.height / 2 - mid);
+        if (d < bestDist) { bestDist = d; best = k; }
+      });
+      if (best >= 0) show(best);
+    }
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    items.forEach(function (li, k) {
+      li.addEventListener("mouseenter", function () { hovering = k; show(k); });
+      li.addEventListener("mouseleave", function () { hovering = -1; update(); });
+      li.addEventListener("focusin", function () { show(k); });
+    });
+    update();
+  });
+
+  /* ---------------------------------------------------------------- */
+  /* Masthead titles: set to the width of the page, like a nameplate   */
+  /* ---------------------------------------------------------------- */
+
+  var wideTitles = Array.prototype.slice.call(document.querySelectorAll(".fold__title--wide"));
+  function fitTitles() {
+    wideTitles.forEach(function (t) {
+      var box = t.parentElement;
+      var avail = box.clientWidth - parseFloat(getComputedStyle(box).paddingLeft) - parseFloat(getComputedStyle(box).paddingRight);
+      t.style.fontSize = "";
+      var base = parseFloat(getComputedStyle(t).fontSize);
+      var prev = t.style.display;
+      t.style.display = "inline-block";
+      var w = t.getBoundingClientRect().width;
+      t.style.display = prev;
+      if (!w || !avail) return;
+      var size = base * (avail / w);
+      var cap = window.innerWidth * 0.17;
+      t.style.fontSize = Math.min(size, cap).toFixed(2) + "px";
+    });
+  }
+  if (wideTitles.length) {
+    fitTitles();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitles);
+    var fitTimer;
+    window.addEventListener("resize", function () { clearTimeout(fitTimer); fitTimer = setTimeout(fitTitles, 120); });
+  }
+
+  /* ---------------------------------------------------------------- */
   /* Tabs (properties)                                                 */
   /* ---------------------------------------------------------------- */
 
@@ -554,7 +694,7 @@
     }
 
     /* 1. The first fold on the page: a composed intro. Nav stays put; the caption settles in. */
-    var first = document.querySelector("main > .fold");
+    var first = document.querySelector("main .fold");
     var introCaption = first ? first.querySelector(".fold__caption") : null;
     if (introCaption && first.getBoundingClientRect().top < window.innerHeight) {
       var title = introCaption.querySelector(".fold__title");
@@ -566,7 +706,79 @@
       if (words && words.length) tl.fromTo(words, { y: "0.4em", opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.05 }, 0);
       else if (title) tl.fromTo(title, { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 }, 0);
       if (rest.length) tl.fromTo(rest, { opacity: 0 }, { opacity: 1, duration: 0.35, stagger: 0.08 }, 0.2);
+      var heroImg = first.querySelector("img, video");
+      if (heroImg) tl.fromTo(heroImg, { scale: 1.06 }, { scale: 1, duration: 1.6, ease: "power2.out" }, 0);
       introCaption.dataset.intro = "done";
+    }
+
+    /* 1b. Showcase: the hero stays pinned while the property cards slide in from the right. Wide,
+     * fine pointer screens only; elsewhere the row is a native horizontal scroller. */
+    var showcase = document.querySelector("[data-showcase]");
+    var deckEl = showcase ? showcase.querySelector("[data-deck]") : null;
+    if (showcase && deckEl && window.matchMedia("(min-width: 60rem) and (pointer: fine)").matches) {
+      showcase.classList.add("is-pinned");
+      var cards = gsap.utils.toArray(deckEl.querySelectorAll(".card"));
+      var dim = document.createElement("div");
+      dim.className = "showcase__dim";
+      showcase.insertBefore(dim, deckEl);
+      var explore = showcase.querySelector("[data-explore]");
+      if (explore) explore.hidden = false;
+      /* The reader will pass every card, so fetch their photographs now rather than as they slide in. */
+      deckEl.querySelectorAll("img[loading=lazy]").forEach(function (im) { im.loading = "eager"; });
+      var travel = function () {
+        var gutter = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--page-gutter")) || 48;
+        var last = cards[cards.length - 1];
+        return Math.max(0, deckEl.offsetLeft + last.offsetLeft + last.offsetWidth - window.innerWidth + gutter);
+      };
+      var master = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          id: "showcase",
+          trigger: showcase,
+          start: "top top",
+          end: function () { return "+=" + Math.round(travel() * 0.85); },
+          pin: true,
+          scrub: 0.5,
+          anticipatePin: 1,
+          invalidateOnRefresh: true
+        }
+      });
+      master.to(deckEl, { x: function () { return -travel(); }, duration: 1 }, 0)
+            .to(dim, { opacity: 0.55, duration: 0.5 }, 0);
+      cards.forEach(function (card, i) {
+        var img = card.querySelector(".card__media img");
+        var bits = Array.prototype.slice.call(card.querySelectorAll(".card__status, .card__name, .card__price, .card__specs, .card__count, .card__go, .card__kicker, .card__lead, .card__panel .link"));
+        gsap.set(bits, { y: 10, opacity: 0, filter: "blur(6px)" });
+        var reveal = gsap.timeline({ paused: true, defaults: { ease: EASE_OUT } });
+        reveal.to(bits, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.45, stagger: 0.07 }, 0);
+        card.__on = false;
+        if (i === 0 && !img) { card.__on = true; reveal.progress(1); }
+        var arrive = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            containerAnimation: master,
+            start: "left 96%",
+            end: "left 45%",
+            scrub: 1,
+            invalidateOnRefresh: true,
+            onUpdate: function (st) {
+              var on = st.progress > 0.2;
+              if (on === card.__on) return;
+              card.__on = on;
+              if (on) reveal.timeScale(1).play();
+              else if (reveal.progress() > 0) reveal.timeScale(2).reverse();
+            }
+          }
+        });
+        if (img) arrive.fromTo(card, { "--grow": 0 }, { "--grow": 1, duration: 1, ease: "none" }, 0)
+                       .fromTo(img, { scale: 1.25 }, { scale: 1, duration: 1.4, ease: "none" }, 0);
+        else arrive.fromTo(card, { opacity: 0.6 }, { opacity: 1, duration: 1, ease: "none" }, 0);
+      });
+      if (explore) explore.addEventListener("click", function () {
+        var step = cards[1] ? cards[1].offsetWidth * 0.85 : window.innerHeight;
+        if (lenis && lenis.scrollTo) lenis.scrollTo(window.scrollY + step, { duration: 0.9 });
+        else window.scrollBy({ top: step, behavior: "smooth" });
+      });
     }
 
     /* 2. Every other heading arrives when it enters the viewport, once. Only a page title is split

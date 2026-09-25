@@ -41,7 +41,7 @@ export default {
   </div>
 </section>
 
-${statement("Restraint, repeated, becomes a signature.", { heading: true })}
+${statement("Restraint, repeated, <em>becomes a signature.</em>", { heading: true })}
 
 <section class="section bleed">
   ${runhead("How Ikem works", "About", 2)}

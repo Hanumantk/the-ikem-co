@@ -37,6 +37,7 @@ export function header({ over = false, current = "" } = {}) {
     ${links}
   </nav>
   <div class="site-head__right">
+    <span class="site-head__time caps" data-clock hidden>Los Angeles <time data-clock-time></time></span>
     <a class="site-head__login" href="{{root}}client-login.html">Client Login</a>
     <button class="menu-toggle" type="button" data-menu-open aria-haspopup="dialog" aria-controls="site-menu" aria-expanded="false">${icon("list", "nav")}<span>Menu</span></button>
   </div>
@@ -45,7 +46,7 @@ export function header({ over = false, current = "" } = {}) {
 }
 
 export function menu(current) {
-  const primary = PRIMARY.map((p) => `<li><a href="{{root}}${p.href}"${p.key === current ? ' aria-current="page"' : ""}>${p.label}${icon("arrow-right", "quiet")}</a></li>`).join("\n      ");
+  const primary = PRIMARY.map((p, i) => `<li><a href="{{root}}${p.href}"${p.key === current ? ' aria-current="page"' : ""}><span class="menu__num caps" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>${p.label}${icon("arrow-right", "quiet")}</a></li>`).join("\n      ");
   const list = (items) => items.map((i) => `<li><a href="{{root}}${i.href}">${i.label}</a></li>`).join("\n          ");
   return `<dialog id="site-menu" class="menu" aria-label="Site menu">
   <div class="menu__inner" data-lenis-prevent>
@@ -86,7 +87,7 @@ export function menu(current) {
         </div>
       </div>
     </div>
-    <p class="menu__foot">${SITE.person} · Broker · DRE ${SITE.dre}</p>
+    <p class="menu__foot">${SITE.person} · Broker · DRE ${SITE.dre}<span data-clock hidden> · Los Angeles <time data-clock-time></time></span></p>
   </div>
 </dialog>`;
 }
@@ -104,6 +105,7 @@ export function footer() {
     <p>A few letters a year on the market, the neighborhoods, and the work.</p>
     ${newsletterForm({ id: "foot" })}
   </div>
+  <p class="site-foot__mark" aria-hidden="true">The Ikem Co.</p>
   <div class="site-foot__bottom">
     <nav class="site-foot__links" aria-label="Footer">
       ${links}

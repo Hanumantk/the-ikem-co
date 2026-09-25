@@ -48,7 +48,7 @@ export const servicesIndex = {
   </div>
 </section>
 
-${statement("The residential sale is where most relationships begin. It is rarely where they end.")}
+${statement("The residential sale is where most relationships begin. It is rarely <em>where they end.</em>")}
 
 ${photo("home-beverly", "1530 North Beverly Drive, Beverly&nbsp;Hills&nbsp;·&nbsp;Sold", { pos: "50% 60%" })}
 

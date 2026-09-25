@@ -112,18 +112,20 @@ export function slot(kind = "4x3", alt = "Photograph to follow", opts = {}) {
 }
 
 /** Full bleed photographic fold: the home hero and the neighborhood heroes. */
-export function fold({ image, slotKind, variant = "band", title, titleSmall = true, line, link, priority = false, pos, posM, alt, eyebrow, id }) {
+export function fold({ image, slotKind, variant = "band", title, titleSmall = true, line, link, priority = false, pos, posM, alt, eyebrow, id, masthead = false, explore = false }) {
   const media = image
     ? pic(image, { priority, pos, posM, alt, sizes: "100vw" })
     : slot(slotKind || "16x9", alt || "Photograph to follow", { pos });
   const parts = [];
-  if (title) parts.push(variant === "hero" ? `<h1 class="fold__title">${title}</h1>` : `<h2 class="fold__title">${title}</h2>`);
+  const tcls = `fold__title${masthead ? " fold__title--wide" : ""}`;
+  if (title) parts.push(variant === "hero" ? `<h1 class="${tcls}">${title}</h1>` : `<h2 class="${tcls}">${title}</h2>`);
   if (line) parts.push(`<p class="fold__line">${line}</p>`);
   if (eyebrow) parts.push(`<p class="caps">${eyebrow}</p>`);
   if (link) parts.push(`<a class="link link--light" href="${link.href}">${link.label}</a>`);
-  return `<section class="fold fold--${variant}"${id ? ` id="${id}"` : ""}>
+  if (explore) parts.push(`<button class="fold__explore caps-ctl" type="button" data-explore hidden><span>Scroll to explore</span>${icon("arrow-right", "quiet")}</button>`);
+  return `<section class="fold fold--${variant}${masthead ? " fold--masthead" : ""}"${id ? ` id="${id}"` : ""}>
   ${media}
-  <div class="fold__caption">
+  <div class="fold__caption${masthead ? " fold__caption--masthead" : ""}">
     ${parts.join("\n    ")}
   </div>
 </section>`;
@@ -153,7 +155,7 @@ export function statement(text, { caps, heading = false } = {}) {
 
 /** Closing block used at the end of most pages: quiet, typographic, the phone and email as text.
  *  image and pos are accepted for compatibility and ignored. */
-export function closing({ title = "Begin a conversation.", line = "By appointment, in person or by phone.", href = "{{root}}contact.html", label = "Contact →" } = {}) {
+export function closing({ title = "Begin a <em>conversation.</em>", line = "By appointment, in person or by phone.", href = "{{root}}contact.html", label = "Contact →" } = {}) {
   return `<section class="close">
   <div>
     <h2>${title}</h2>
@@ -197,6 +199,53 @@ export function folios(items) {
     return it.href ? `<li><a href="${it.href}"${attrs}>${inner}</a></li>` : `<li><div class="folio">${inner}</div></li>`;
   }).join("\n");
   return `<ol class="folios">\n${li}\n</ol>`;
+}
+
+/** Deck: a row of property cards. Inside a [data-showcase] wrapper the script pins the hero and slides
+ *  the row in from the right; otherwise it is a native horizontal snap row. */
+export function deck({ lead, cards }) {
+  const total = String(cards.length).padStart(2, "0");
+  const leadCard = lead ? `<article class="card card--lead">
+    <div class="card__panel">
+      <p class="caps card__kicker">${lead.kicker}</p>
+      <p class="card__lead">${lead.text}</p>
+      <a class="link" href="${lead.href}">${lead.label}</a>
+    </div>
+  </article>` : "";
+  const items = cards.map((c, i) => `<article class="card${c.active ? " card--active" : ""}">
+    <a class="card__media" href="${c.href}" tabindex="-1" aria-hidden="true">${pic(c.image, { px: false, pos: c.pos, alt: c.alt, sizes: "(min-width: 60rem) 48rem, 78vw" })}</a>
+    <div class="card__panel">
+      <p class="caps card__status"><i class="${c.active ? "is-active" : ""}"></i>${c.status}</p>
+      <h3 class="card__name"><a href="${c.href}">${c.name}</a></h3>
+      ${c.price ? `<p class="card__price">${c.price}</p>` : ""}
+      ${c.specs ? `<p class="card__specs">${c.specs}</p>` : ""}
+      <p class="caps card__count"><span class="tnum">${String(i + 1).padStart(2, "0")}</span> / <span class="tnum">${total}</span></p>
+      <a class="card__go" href="${c.href}" aria-label="${c.name}">${icon("arrow-right", "link")}</a>
+    </div>
+  </article>`).join("\n  ");
+  return `<div class="deck" data-deck>
+  ${leadCard}
+  ${items}
+</div>`;
+}
+
+/** Facts row: large light numerals with a small label beneath each, on a hairline. */
+export function facts(items) {
+  return `<div class="facts tnum">\n${items.map((f) => `<p><b>${f.n}</b><span class="caps">${f.label}</span></p>`).join("\n")}\n</div>`;
+}
+
+/** Tour: a photograph that stays put while the reader moves down a list; the photograph changes with the list. */
+export function tour(items) {
+  const pics = items.map((t, i) => `<div class="tour__pic${i === 0 ? " is-on" : ""}" data-tour-pic="${i}">${pic(t.image, { px: false, pos: t.pos, sizes: "(min-width: 60rem) 40vw, 100vw" })}</div>`).join("\n    ");
+  const li = items.map((t, i) => `<li data-tour-item="${i}"${i === 0 ? ' class="is-current"' : ""}><a href="${t.href}"><span class="tour__name">${t.name}</span>${t.note ? `<span class="tour__note">${t.note}</span>` : ""}</a></li>`).join("\n    ");
+  return `<div class="tour" data-tour>
+  <div class="tour__media" aria-hidden="true">
+    ${pics}
+  </div>
+  <ol class="tour__list">
+    ${li}
+  </ol>
+</div>`;
 }
 
 /** Photo row: tall tiles in one row, the name set in the serif beneath. No description, no arrow, no border. */

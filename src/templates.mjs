@@ -15,7 +15,7 @@ export function neighborhoodPage(n) {
     over: true,
     current: "neighborhoods",
     content: `
-${fold({ image: n.heroImage, pos: n.heroPos, priority: true, variant: "band", title: n.name, line: n.tagline })}
+${fold({ image: n.heroImage, pos: n.heroPos, priority: true, variant: "band", masthead: true, title: n.name, line: n.tagline })}
 
 <section class="text-fold">
   <p class="lede">${n.lede}</p>

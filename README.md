@@ -80,6 +80,18 @@ To deploy, upload the contents of `dist/` to any static host (Netlify, Vercel, C
 - Services carries one photograph (`photo()`) between the statement and the practices list. About’s story runs at a reading size in a seven column measure with the pull quote sticky in the margin (`.story`).
 - Reveals: only a page title is split into words; everything else fades once, from 10% into the viewport.
 
+## Reference pass (2026-09-25)
+
+Traits taken from the Awwwards real estate, luxury and editorial selections (Loam House, Stone Investment, The Nest, Storey Architecture, 360 Lexington, Brandon Yasin, Momento Legal, ERA Residence), none of their assets or copy: one italic phrase inside a serif headline per page (`<em>`), Los Angeles local time in the masthead and menu (`[data-clock]`, hidden without JavaScript), numbered chapters in the menu and a fixed chapter indicator on wide screens that follows the running heads (`.chapter`, built by site.js), a single action in the photo hero, and the wordmark as the footer’s last line (`.site-foot__mark`).
+
+## Editorial pass (2026-09-25)
+
+The larger moves taken from the same references: the page title set across the full width of the photograph like a nameplate on Home and the neighborhood pages (`fold({ masthead: true })`, sized to the page by `fitTitles` in site.js with an 11.4vw fallback), a row of three large light numerals under the hero (`facts()`, replacing the proof strip), a photograph that stays put while the reader moves down the neighborhood list on wide screens (`tour()`, scroll driven; phones keep the photo tiles), chapter navigation at the foot of wide screens built from the running heads (`.chapter`, click scrolls with Lenis), a soft CSS only page in, and the hero photograph settling from a slight zoom. Scroll driven behaviour is verified in a real browser with dispatched scroll events; headless Chrome under a virtual time budget stops producing frames after the first few.
+
+## Showcase (2026-09-25)
+
+The home hero is pinned while a deck of property cards slides in from the right over the dimming photograph, a choreography studied on lpas.com and rebuilt in this system: `deck()` in helpers renders the cards, the `[data-showcase]` block in site.js pins with ScrollTrigger (scrub 0.5, travel measured from the deck), each card grows its picture from half to two thirds and settles from a slight zoom as it arrives (`--grow` custom property, scrubbed through `containerAnimation`), and its text fades up once the card is a fifth of the way in. "Scroll to explore" advances one card. Wide, fine pointer screens only; elsewhere the same markup is a native horizontal snap row under the hero. The Properties section moved into the deck, so Home’s running heads are Neighborhoods 01, Press 02, Journal 03.
+
 ## Design record
 
 The Hallmark stamp at the top of `public/css/tokens.css` records the macrostructure (Photographic), theme (custom: light / roman serif / forest accent), nav (N9), footer (Ft7), and the pre-emit critique scores. `.hallmark/log.json` keeps the run history for future redesigns.
