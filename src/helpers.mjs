@@ -6,17 +6,16 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 
 /* ------------------------------------------------------------------ */
 /* Icons: Phosphor (MIT, src/data/phosphor-LICENSE.txt), inlined as    */
-/* <symbol>s once per page. Weight carries state. Each role names the  */
-/* weight at rest, on hover or focus, and while pressed.               */
+/* <symbol>s once per page. Weight carries state.                       */
 /* ------------------------------------------------------------------ */
 const PHOSPHOR = JSON.parse(readFileSync(join(HERE, "data", "phosphor.json"), "utf8"));
 export const ICON_ROLES = {
-  nav:   { rest: "regular", hover: "bold",    active: "bold" },     /* menu open and close: the primary controls */
-  link:  { rest: "light",   hover: "regular", active: "bold" },     /* arrows on text links and small buttons */
-  quiet: { rest: "thin",    hover: "light",   active: "regular" },  /* arrows beside list items, secondary to the words */
-  field: { rest: "light",   hover: "regular", active: "regular" },  /* form furniture */
-  play:  { rest: "regular", hover: "fill",    active: "fill" },     /* film posters: the glyph fills as you commit */
-  mark:  { rest: "regular" },                                       /* static marks */
+  nav:   { rest: "regular", hover: "bold",    active: "bold" },
+  link:  { rest: "light",   hover: "regular", active: "bold" },
+  quiet: { rest: "thin",    hover: "light",   active: "regular" },
+  field: { rest: "light",   hover: "regular", active: "regular" },
+  play:  { rest: "regular", hover: "fill",    active: "fill" },
+  mark:  { rest: "regular" },
 };
 const usedSymbols = new Set();
 
@@ -32,7 +31,6 @@ export function icon(name, role = "link", opts = {}) {
   return `<svg class="ic ic--${role}${opts.cls ? " " + opts.cls : ""}" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false">${uses.join("")}</svg>`;
 }
 
-/** Symbol sheet for every icon and weight used anywhere on the site. Emitted once at the end of <body>. */
 export function iconSprite() {
   const syms = [...usedSymbols].sort().map((id) => {
     const m = id.match(/^ph-(.+)-(thin|light|regular|bold|fill)$/);
@@ -64,22 +62,12 @@ export const SITE = {
   url: "https://hanumantk.github.io/the-ikem-co/",
 };
 
-/* Responsive image manifest, generated from the supplied photography. */
+/* Responsive image manifest. Two portraits remain in use (the home hero and the About page);
+ * everything else is property and neighborhood photography from the listing pages on
+ * milliondollarliving.com. */
 export const IMAGES = {
   "ikem-agave-sunset":   { w: 1600, h: 1067, sizes: [640, 1000, 1600], face: "0.20,0.11", body: "0.38", alt: "Ikem Chukumerije in a cream suit on an outdoor stair beside an agave, hills and a low sun behind him" },
-  "ikem-window-dusk":    { w: 1600, h: 1067, sizes: [640, 1000, 1600], face: "0.44,0.21", body: "0.46", alt: "Ikem Chukumerije seated by floor to ceiling glass at dusk, looking toward the ocean" },
-  "ikem-dining-table":   { w: 1600, h: 1067, sizes: [640, 1000, 1600], face: "0.65,0.22", body: "0.48", alt: "Ikem Chukumerije in a brown suit seated at a light wood dining table, sky through the glass behind" },
-  "ikem-concrete-bench": { w: 1600, h: 1067, sizes: [640, 1000, 1600], face: "0.62,0.20", body: "0.48", alt: "Ikem Chukumerije seated on a built in bench against a board formed concrete wall" },
-  "ikem-living-room":    { w: 1067, h: 1600, sizes: [640, 1000, 1067], face: "0.53,0.21", body: "0.42", alt: "Ikem Chukumerije standing in a living room with ocean views, one hand in his pocket" },
-  "ikem-portrait-hands": { w: 1067, h: 1600, sizes: [640, 1000, 1067], face: "0.51,0.16", body: "0.46", alt: "Portrait of Ikem Chukumerije in a cream double breasted suit, fingertips together" },
-  "ikem-seated-grey":    { w: 1067, h: 1600, sizes: [640, 1000, 1067], face: "0.49,0.19", body: "0.42", alt: "Ikem Chukumerije in a grey suit seated in a low chair, forearms on his knees" },
-  "ikem-glass-door":     { w: 1067, h: 1600, sizes: [640, 1000, 1067], face: "0.49,0.15", body: "0.38", alt: "Ikem Chukumerije standing at a glass door with the hills and coastline reflected around him" },
-  "ikem-leaning-door":   { w: 1047, h: 1600, sizes: [640, 1000, 1047], face: "0.55,0.16", body: "0.42", alt: "Ikem Chukumerije leaning against a door frame, hand in his pocket, sea behind" },
-  "ikem-bench-seated":   { w: 1067, h: 1600, sizes: [640, 1000, 1067], face: "0.51,0.16", body: "0.42", alt: "Ikem Chukumerije seated on a stone bench in a courtyard, legs crossed" },
-  "ikem-stair-rail":     { w: 1067, h: 1600, sizes: [640, 1000, 1067], face: "0.52,0.18", body: "0.40", alt: "Ikem Chukumerije on an exterior stair, one hand on the steel rail, hills behind" },
-  "ikem-terrace-table":  { w: 1067, h: 1600, sizes: [640, 1000, 1067], face: "0.44,0.07", body: "0.30", alt: "Ikem Chukumerije standing at a set terrace table at sunset" },
-  /* Property and neighborhood photography, taken from the listing pages on milliondollarliving.com.
-   * No face data: the drift centres the frame instead. */
+  "ikem-portrait-hands": { w: 1067, h: 1600, sizes: [640, 1000, 1067], alt: "Portrait of Ikem Chukumerije in a cream double breasted suit, fingertips together" },
   "home-bedford-day": { w: 1600, h: 1067, sizes: [640, 1000, 1600], alt: "6125 Bedford Avenue, a single level midcentury house in Ladera Heights with a stone facade, a wide drive, and palms" },
   "home-bedford-dusk": { w: 1600, h: 1067, sizes: [640, 1000, 1600], alt: "6125 Bedford Avenue at dusk, a low midcentury roofline and lit windows under a pink sky" },
   "home-green-vista": { w: 1200, h: 899, sizes: [640, 1000, 1200], alt: "3818 Green Vista Drive, Encino, seen from above at dusk with the pool and lawn lit" },
@@ -94,10 +82,8 @@ export const IMAGES = {
 
 /**
  * Responsive picture element.
- * opts: alt (override), sizes, loading ("lazy" | "eager"), priority (bool), pos (object-position fallback),
- *       posM (mobile fallback), cls, frame ("portrait" | "wide" | "square") wraps the picture in a parallax frame.
- * Every photograph carries data-px (parallax drift) for site.js unless opts.px is false (static card
- * images); portraits also carry data-face and data-body for the face aware crop.
+ * opts: alt, sizes, loading, priority, pos, posM, cls, frame ("portrait" | "wide") for a drifting frame,
+ * px:false for a static image. Photographs carry data-px (drift) unless px is false.
  */
 export function pic(name, opts = {}) {
   const img = IMAGES[name];
@@ -125,18 +111,15 @@ export function slot(kind = "4x3", alt = "Photograph to follow", opts = {}) {
 <img src="{{root}}assets/img/slot-${kind}.svg" width="${dims[0]}" height="${dims[1]}" alt="${alt}" loading="lazy" decoding="async"${style}>`;
 }
 
-/** Full bleed photographic fold (H6). */
-/* plate is accepted for compatibility and no longer rendered: photographs carry no caption plate. */
-export function fold({ image, slotKind, variant = "band", title, titleSmall = true, line, link, plate, priority = false, pos, posM, alt, eyebrow, id }) {
+/** Full bleed photographic fold: the home hero and the neighborhood heroes. */
+export function fold({ image, slotKind, variant = "band", title, titleSmall = true, line, link, priority = false, pos, posM, alt, eyebrow, id }) {
   const media = image
     ? pic(image, { priority, pos, posM, alt, sizes: "100vw" })
     : slot(slotKind || "16x9", alt || "Photograph to follow", { pos });
   const parts = [];
-  if (eyebrow) parts.push(`<p class="caps">${eyebrow}</p>`);
-  if (title) parts.push(variant === "hero"
-    ? `<h1 class="fold__title">${title}</h1>`
-    : `<h2 class="fold__title${titleSmall ? " fold__title--s" : ""}">${title}</h2>`);
+  if (title) parts.push(variant === "hero" ? `<h1 class="fold__title">${title}</h1>` : `<h2 class="fold__title">${title}</h2>`);
   if (line) parts.push(`<p class="fold__line">${line}</p>`);
+  if (eyebrow) parts.push(`<p class="caps">${eyebrow}</p>`);
   if (link) parts.push(`<a class="link link--light" href="${link.href}">${link.label}</a>`);
   return `<section class="fold fold--${variant}"${id ? ` id="${id}"` : ""}>
   ${media}
@@ -146,9 +129,42 @@ export function fold({ image, slotKind, variant = "band", title, titleSmall = tr
 </section>`;
 }
 
-/** Closing fold used at the end of most pages. */
-export function closing({ image = "ikem-concrete-bench", pos, title = "Begin a conversation.", line = "By appointment, in person or by phone.", href = "{{root}}contact.html", label = "Contact →" } = {}) {
-  return fold({ image, pos, variant: "short", title, line, link: { href, label }, plate: SITE.phone });
+/** Signature: running head with a hairline above, the label at left and a folio at right. */
+export function runhead(label, page, n) {
+  const folio = `<b>${SITE.name}</b> · ${page} · ${String(n).padStart(2, "0")}`;
+  return `<div class="runhead"><span class="caps">${label}</span><span class="caps runhead__folio">${folio}</span></div>`;
+}
+
+/** Signature: the single italic pull quote a page is allowed. */
+export function pullq(quote, who, role) {
+  return `<blockquote class="pullq">
+  <p>“${quote}”</p>
+  <footer class="caps"><b>${who}</b>${role ? ` · ${role}` : ""}</footer>
+</blockquote>`;
+}
+
+/** A single centered statement with a lot of air around it. */
+export function statement(text, { caps, heading = false } = {}) {
+  return `<section class="statement">
+  ${caps ? `<p class="caps">${caps}</p>` : ""}
+  ${heading ? `<h2>${text}</h2>` : `<p>${text}</p>`}
+</section>`;
+}
+
+/** Closing block used at the end of most pages: quiet, typographic, the phone and email as text.
+ *  image and pos are accepted for compatibility and ignored. */
+export function closing({ title = "Begin a conversation.", line = "By appointment, in person or by phone.", href = "{{root}}contact.html", label = "Contact →" } = {}) {
+  return `<section class="close">
+  <div>
+    <h2>${title}</h2>
+    <p class="close__line">${line}</p>
+  </div>
+  <div class="close__means">
+    <a href="${SITE.phoneHref}">${SITE.phone}</a>
+    <a href="mailto:${SITE.email}">${SITE.email}</a>
+    <a class="link" href="${href}">${label}</a>
+  </div>
+</section>`;
 }
 
 export function headHang(title, para) {
@@ -157,16 +173,51 @@ export function headHang(title, para) {
 </header>`;
 }
 
-/** Property card (F6). */
-export function propertyCard({ status, statusNote, name, href, price, specs, active = false, image, imagePos, imageAlt, slotAlt }) {
-  const media = image ? pic(image, { px: false, pos: imagePos, alt: imageAlt, sizes: "(min-width: 60rem) 33vw, (min-width: 40rem) 50vw, 100vw" }) : slot("4x3", slotAlt || `${name}, photograph to follow`);
-  return `<article class="card">
-  <a class="card__media" href="${href}" tabindex="-1" aria-hidden="true">${media}</a>
-  <p class="card__status caps"><i class="${active ? "is-active" : ""}"></i>${status}${statusNote ? ` · ${statusNote}` : ""}</p>
-  <h3 class="card__name"><a href="${href}">${name}</a></h3>
-  ${price ? `<p class="card__price tnum">${price}</p>` : ""}
-  ${specs ? `<p class="card__specs">${specs}</p>` : ""}
+/** Listing: a large photograph, then the address and price on one hairline. */
+export function listing({ status, statusNote, name, href, price, specs, active = false, image, imagePos, imageAlt, lead = false, sizes }) {
+  const media = image
+    ? pic(image, { px: false, pos: imagePos, alt: imageAlt, sizes: sizes || (lead ? "100vw" : "(min-width: 60rem) 50vw, 100vw") })
+    : slot("4x3", `${name}, photograph to follow`);
+  return `<article class="listing${lead ? " listing--lead" : ""}">
+  <a class="listing__media" href="${href}" tabindex="-1" aria-hidden="true">${media}</a>
+  <div class="listing__line">
+    <h3 class="listing__name"><a href="${href}">${name}</a></h3>
+    ${price ? `<p class="listing__price">${price}</p>` : ""}
+    ${status ? `<p class="listing__status caps"><i class="${active ? "is-active" : ""}"></i>${status}${statusNote ? ` · ${statusNote}` : ""}</p>` : ""}
+    ${specs ? `<p class="listing__specs">${specs}</p>` : ""}
+  </div>
 </article>`;
+}
+
+/** Numbered list with large folio numerals. Items with href are links. */
+export function folios(items) {
+  const li = items.map((it) => {
+    const inner = `<span class="folio__name">${it.name}</span>${it.note ? `<span class="folio__note">${it.note}</span>` : ""}${it.href ? `<span class="folio__arrow" aria-hidden="true">${icon("arrow-right", "quiet")}</span>` : ""}`;
+    const attrs = it.peek ? ` data-peek="${it.peek}"` : "";
+    return it.href ? `<li><a href="${it.href}"${attrs}>${inner}</a></li>` : `<li><div class="folio">${inner}</div></li>`;
+  }).join("\n");
+  return `<ol class="folios">\n${li}\n</ol>`;
+}
+
+/** Photo row: tall tiles in one row, the name set in the serif beneath. No description, no arrow, no border. */
+export function tiles(items) {
+  const li = items.map((t) => `<li><a href="${t.href}">${pic(t.image, { px: false, pos: t.pos, sizes: "(min-width: 60rem) 20vw, 70vw" })}<span class="tile__name">${t.name}</span></a></li>`);
+  return `<ul class="tiles">\n${li.join("\n")}\n</ul>`;
+}
+
+/** One photograph, edge to edge, with a single line of small caps beneath. */
+export function photo(image, caption, opts = {}) {
+  return `<figure class="photo">
+  ${pic(image, { px: false, pos: opts.pos, alt: opts.alt, sizes: "100vw" })}
+  ${caption ? `<figcaption class="caps muted">${caption}</figcaption>` : ""}
+</figure>`;
+}
+
+/** Journal entries as a hairline table: kicker, title, standfirst. */
+export function journalTable(entries) {
+  return `<ul class="journal">
+${entries.map((e) => `<li><a href="{{root}}journal/${e.slug}.html"><span class="journal__kicker caps">${e.kicker}</span><span class="journal__title">${e.title}</span><span class="journal__standfirst">${e.standfirst}</span></a></li>`).join("\n")}
+</ul>`;
 }
 
 export function rows(items, { compact = false } = {}) {
@@ -183,8 +234,8 @@ export function steps(items) {
   return `<ol class="steps">\n${items.map((s) => `<li><h3>${s.title}</h3><p>${s.body}</p></li>`).join("\n")}\n</ol>`;
 }
 
-export function defs(items) {
-  return `<dl class="defs">\n${items.map((d) => `<div><dt>${d.term}</dt><dd>${d.body}</dd></div>`).join("\n")}\n</dl>`;
+export function defs(items, { table = false } = {}) {
+  return `<dl class="defs${table ? " defs--table" : ""}">\n${items.map((d) => `<div><dt>${d.term}</dt><dd>${d.body}</dd></div>`).join("\n")}\n</dl>`;
 }
 
 /** Lead capture form. */
@@ -242,7 +293,7 @@ export function leadForm({ id = "inquiry", interest } = {}) {
 </form>`;
 }
 
-export function newsletterForm({ id = "nl", light = false } = {}) {
+export function newsletterForm({ id = "nl" } = {}) {
   return `<form class="nl" action="${SITE.formEndpoint}" method="POST" data-form novalidate
   data-success="You are on the list. The first letter will arrive when there is something worth saying."
   data-failure="That didn’t go through. Email ${SITE.email} with the word Subscribe and it will be added by hand.">
@@ -258,10 +309,7 @@ export function newsletterForm({ id = "nl", light = false } = {}) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Press wall: official wordmark files (vendored SVGs) rendered as ink  */
-/* coloured masks before each outlet's name. An outlet without a file   */
-/* falls back to its typographic mark. Drop a new SVG into              */
-/* public/assets/press and add it here.                                 */
+/* Press wall: official wordmarks on one hairline row.                 */
 /* ------------------------------------------------------------------ */
 export const PRESS = [
   { name: "The Hollywood Reporter", file: "hollywood-reporter.svg", serif: false },
@@ -291,7 +339,6 @@ export function pressWall() {
   const cells = PRESS.map((o) => {
     const ratio = svgRatio(o.file);
     if (ratio) {
-      /* Official wordmark in its own colours; the outlet's name lives in the alt text. */
       return `<li class="has-logo"><img class="press-logo" src="{{root}}assets/press/${o.file}" alt="${o.name}" width="${Math.round(ratio * 100)}" height="100" loading="lazy" decoding="async" style="--ratio:${ratio.toFixed(3)}"></li>`;
     }
     return `<li><span class="mark${o.serif ? " mark--serif" : ""}">${o.name}</span></li>`;

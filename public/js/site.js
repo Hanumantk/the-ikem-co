@@ -563,30 +563,32 @@
       /* Hand the caption back to CSS (the pre-intro rule stops applying), then animate with explicit end states. */
       introCaption.classList.add("is-live");
       var tl = gsap.timeline({ defaults: { ease: EASE_OUT }, delay: 0.1 });
-      if (words && words.length) tl.fromTo(words, { y: "0.55em", opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, stagger: 0.06 }, 0);
-      else if (title) tl.fromTo(title, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, 0);
-      if (rest.length) tl.fromTo(rest, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, stagger: 0.12 }, 0.45);
+      if (words && words.length) tl.fromTo(words, { y: "0.4em", opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.05 }, 0);
+      else if (title) tl.fromTo(title, { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 }, 0);
+      if (rest.length) tl.fromTo(rest, { opacity: 0 }, { opacity: 1, duration: 0.35, stagger: 0.08 }, 0.2);
       introCaption.dataset.intro = "done";
     }
 
-    /* 2. Every other heading arrives when it enters the viewport, once. */
-    var heads = Array.prototype.slice.call(document.querySelectorAll("main h1, .fold__title, .head-hang h2, .sticky-intro h2, .split > div > h2"));
+    /* 2. Every other heading arrives when it enters the viewport, once. Only a page title is split
+     * into words; section heads, statements, and paragraphs take a single opacity fade. */
+    var heads = Array.prototype.slice.call(document.querySelectorAll("main h1, .fold__title, .section h2, .statement > p, .statement > h2, .close h2"));
     heads.forEach(function (h) {
       if (introCaption && introCaption.contains(h)) return;
       if (h.closest("dialog")) return;
-      var ws = splitWords(h);
+      var ws = h.tagName === "H1" ? splitWords(h) : null;
       var follow = [];
       var fold = h.closest(".fold__caption");
       if (fold) follow = Array.prototype.filter.call(fold.children, function (c) { return c !== h; });
       var hang = h.closest(".head-hang");
       if (hang) follow = Array.prototype.filter.call(hang.children, function (c) { return c !== h; });
+      if (h.closest(".statement") || h.closest(".close")) follow = [];
       var seq = gsap.timeline({
         defaults: { ease: EASE_OUT },
-        scrollTrigger: { trigger: h, start: "top 88%", once: true }
+        scrollTrigger: { trigger: h, start: "top 90%", once: true }
       });
-      if (ws && ws.length) seq.fromTo(ws, { y: "0.5em", opacity: 0 }, { y: 0, opacity: 1, duration: 0.85, stagger: 0.04 }, 0);
-      else seq.fromTo(h, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, 0);
-      if (follow.length) seq.fromTo(follow, { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.1 }, 0.3);
+      if (ws && ws.length) seq.fromTo(ws, { y: "0.35em", opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.03 }, 0);
+      else seq.fromTo(h, { opacity: 0 }, { opacity: 1, duration: 0.35 }, 0);
+      if (follow.length) seq.fromTo(follow, { opacity: 0 }, { opacity: 1, duration: 0.3, stagger: 0.06 }, 0.1);
     });
 
     /* Measurements move when fonts and photographs land. */

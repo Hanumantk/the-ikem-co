@@ -1,4 +1,4 @@
-import { SITE, closing, headHang, icon } from "../helpers.mjs";
+import { SITE, closing, runhead, icon } from "../helpers.mjs";
 
 const films = [
   { id: "paul", name: "Chris and Jada Paul", quote: "We couldn’t have been any happier with Ikem and his professionalism.", role: "Clients" },
@@ -31,7 +31,7 @@ export default {
       <h1>Client films</h1>
       <p class="lede">Past clients, in their own words. The films are short, and the written version sits beneath each one.</p>
     </div>
-    <div class="text-fold__aside" style="align-self:end">
+    <div class="text-fold__aside dropcap" style="align-self:end">
       <p>Every client named here has agreed to be named. Many of the people Ikem represents prefer not to be, and that preference is honored without exception.</p>
     </div>
   </div>
@@ -43,12 +43,13 @@ export default {
   </div>
 </section>
 
-<section class="section section--rule defer">
-  ${headHang("Add your voice", "If Ikem has represented you and you would like to be part of this page, on film or in writing, write to him directly.")}
+<section class="section">
+  ${runhead("Add your voice", "Client films", 1)}
+  <p class="muted" style="max-width:56ch;margin-block-end:var(--space-lg)">If Ikem has represented you and you would like to be part of this page, on film or in writing, write to him directly.</p>
   <a class="link" href="mailto:${SITE.email}?subject=A%20few%20words%20for%20the%20site">${SITE.email} →</a>
 </section>
 
-${closing({ image: "ikem-dining-table", pos: "62% 50%", title: "The next conversation could be yours.", line: "By appointment, in person or by phone.", label: "Contact →" })}
+${closing({ title: "The next conversation could be yours.", line: "By appointment, in person or by phone.", label: "Contact →" })}
 
 <dialog id="film-dialog" class="film-dialog" aria-label="Client film" data-lenis-prevent>
   <div class="film-dialog__bar">

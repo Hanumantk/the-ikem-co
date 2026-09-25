@@ -11,6 +11,9 @@ export const PRIMARY = [
   { key: "contact", label: "Contact", href: "contact.html" },
 ];
 
+/* The masthead carries seven links; Testimonials lives in the footer and the small screen menu. */
+const MASTHEAD = PRIMARY.filter((p) => p.key !== "testimonials");
+
 export const NEIGHBORHOODS_NAV = [
   { label: "Ladera Heights", href: "neighborhoods/ladera-heights.html" },
   { label: "View Park", href: "neighborhoods/view-park.html" },
@@ -26,13 +29,17 @@ export const SERVICES_NAV = [
   { label: "Construction Advisory", href: "services/construction-advisory.html" },
 ];
 
-export function header({ over = false } = {}) {
+export function header({ over = false, current = "" } = {}) {
+  const links = MASTHEAD.map((p) => `<a href="{{root}}${p.href}"${p.key === current ? ' aria-current="page"' : ""}>${p.label}</a>`).join("\n    ");
   return `<header class="site-head${over ? " site-head--over" : ""}">
   <a class="wordmark" href="{{root}}index.html" aria-label="The Ikem Co., home">The Ikem<sup>®</sup> Co.</a>
-  <nav class="site-head__right" aria-label="Utility">
+  <nav class="site-nav" aria-label="Primary">
+    ${links}
+  </nav>
+  <div class="site-head__right">
     <a class="site-head__login" href="{{root}}client-login.html">Client Login</a>
     <button class="menu-toggle" type="button" data-menu-open aria-haspopup="dialog" aria-controls="site-menu" aria-expanded="false">${icon("list", "nav")}<span>Menu</span></button>
-  </nav>
+  </div>
 </header>
 <button class="menu-float" type="button" data-menu-open aria-haspopup="dialog" aria-controls="site-menu" aria-expanded="false" tabindex="-1">${icon("list", "nav")}<span>Menu</span></button>`;
 }
@@ -88,23 +95,20 @@ export function footer() {
   const links = [...PRIMARY, { label: "Client Login", href: "client-login.html" }]
     .map((p) => `<a href="{{root}}${p.href}">${p.label}</a>`).join("\n      ");
   return `<footer class="site-foot">
+  <div class="site-foot__brand">
+    <img class="site-foot__logo" src="{{root}}assets/img/logo.png" width="560" height="233" alt="The Ikem Co." loading="lazy" decoding="async">
+    <p class="site-foot__licence">${SITE.person} · Licensed Real Estate Broker · California DRE ${SITE.dre}. Independently licensed in six states. Information is deemed reliable but not guaranteed.</p>
+    <p class="site-foot__eho">Equal Housing Opportunity</p>
+  </div>
   <div class="site-foot__news">
-    <h2>A few letters a year on the market, the neighborhoods, and the work.</h2>
+    <p>A few letters a year on the market, the neighborhoods, and the work.</p>
     ${newsletterForm({ id: "foot" })}
   </div>
-  <div class="site-foot__meta">
-    <img class="site-foot__logo" src="{{root}}assets/img/logo.png" width="560" height="233" alt="The Ikem Co." loading="lazy" decoding="async">
+  <div class="site-foot__bottom">
     <nav class="site-foot__links" aria-label="Footer">
       ${links}
     </nav>
-    <div class="site-foot__legal">
-      <p class="site-foot__licence">
-        <svg class="eho" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2 2 10h3v10h14V10h3L12 2Zm-4 9h8v2H8v-2Zm0 4h8v2H8v-2Z" fill="currentColor"/></svg>
-        <span>Equal Housing Opportunity</span>
-      </p>
-      <p>${SITE.person} · Licensed Real Estate Broker · California DRE ${SITE.dre}. Independently licensed in six states. Information is deemed reliable but not guaranteed.</p>
-      <p>© ${SITE.year} ${SITE.name} · <a href="${SITE.phoneHref}">${SITE.phone}</a> · <a href="mailto:${SITE.email}">${SITE.email}</a></p>
-    </div>
+    <p class="site-foot__copy">© ${SITE.year} ${SITE.name} · <a href="${SITE.phoneHref}">${SITE.phone}</a> · <a href="mailto:${SITE.email}">${SITE.email}</a></p>
   </div>
 </footer>`;
 }
@@ -121,12 +125,12 @@ export function layout({ title, description, root, over, current, content, head 
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${description}">
 <meta property="og:type" content="website">
-<meta property="og:image" content="${SITE.url}assets/img/ikem-agave-sunset.jpg">
+<meta property="og:image" content="${SITE.url}assets/img/home-bedford-dusk.jpg">
 <meta name="theme-color" content="#153b2e">
 <link rel="icon" href="${root}assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap">
 <link rel="stylesheet" href="${root}css/tokens.css">
 <link rel="stylesheet" href="${root}css/site.css">
 ${head}
@@ -134,7 +138,7 @@ ${head}
 </head>
 <body${bodyClass ? ` class="${bodyClass}"` : ""}>
 <a class="skip" href="#main">Skip to content</a>
-${header({ over })}
+${header({ over, current })}
 <main id="main">
 ${replaceArrows(content)}
 </main>
